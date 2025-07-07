@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Timelapse Control</title>
+  <link rel="stylesheet" href="static/mobile.css" media="only screen and (max-width: 1445px)">
+  <link rel="stylesheet" href="static/style.css" media="only screen and (min-width: 14545px)">
+  
+  <script src="static/socket.io.min.js"></script>
+</head>
+<body>
+	<div id="main">
+		<div id="nav-tabs">
+			<div class="nav-tab selected" data-id="home">
+				Home
+			</div>
+
+			<div class="nav-tab" data-id="log">
+				Log
+			</div>
+			<div class="nav-tab" data-id="settings">
+				Settings
+			</div>
+		</div>
+		<div id="warning" class="hidden">
+			<p><span>Warning: </span>You are running low on space, below threshold {{ config['storage_threshold'] }}MB</p>
+		</div>
+
+		<div class="tab selected" id="home">
+			<fieldset id="diskspace-wrap">
+				<legend>Disk</legend>
+				<div id="diskspace">
+					<div id="free-wrap">Free: <span id="free-space"></span></div>
+					<div id="used-wrap">Used: <span id="used-space">0</span> of <span id="total-space">0</span> &#40;<span id="free-percent"></span>%&#41;</div>
+				</div>
+			</fieldset>
+
+			<div id="cam-wrapper">
+				<fieldset id="cam-latest" class="">
+					<legend>Latest</legend>
+					
+					<img id="latest" src="/latest.jpg" alt="Latest capture">
+				</fieldset>
+				<fieldset id="cam-live" class="hidden">
+					<legend>Live</legend>
+					<img id="stream-img" alt="Live camera stream">
+				</fieldset>
+			</div>
+			<fieldset id="cam-controls-wrapper">
+				<div id="cam-controls">
+					<div id="start-timelapse" class="cam-control-button button">
+						Start Timelapse
+					</div>
+					<div id="stop-timelapse" class="cam-control-button button">
+						Stop Timelapse
+					</div>
+					<div id="toggle-live-view" class="cam-control-button button" id="cam-toggle">
+						Live View
+					</div>
+				</div>
+				<div id="cam-live-warning">
+					You must stop the timelapse script to enable live view.
+				</div>
+			</fieldset>
+			<fieldset id="download-captures" class="settings-fieldset">
+				<legend>Download Captures</legend>
+				<form method="POST" action="/download-captures">
+					<div class="settings-row">
+						<div class="setting-wrapper">
+						  <label for="from-datetime">From:</label>
+						  <input type="datetime-local" id="from-datetime" name="from_datetime">
+						</div>
+						<div class="setting-wrapper">
+						  <label for="to-datetime">To:</label>
+						  <input type="datetime-local" id="to-datetime" name="to_datetime">
+						</div>
+					</div>
+					<button type="submit">Download</button>
+					<div id="download-progress-wrapper" class="hidden">
+						<label id="zip-progress-label">Preparing download...</label><br>
+						<progress id="zip-progress-bar" value="0" max="100" style="width: 100%;"></progress>
+					</div>
+				</form>
+			
+			
+			</fieldset>
+			<fieldset id="zip-list-wrapper" class="settings-fieldset">
+				<legend>Available Downloads</legend>
+				<ul id="zip-list">
+			</fieldset>
+		</div>
+		<div class="tab" id="log">
+			<div id="capture-log">
+			</div>
+		</div>
+		<div class="tab" id="settings">
+ 			<form id="settings-form" method="POST" action="/settings">
+				<fieldset id="network_mode-wrapper" class="settings-fieldset">
+				<legend>Network</legend>
+					<div class="setting-wrapper">
+						<label for="network-mode">Network Mode</label>
+						<select id="network-mode" name="network_mode">
+							<option value="wifi" {% if config['network_mode'] == "wifi" %}selected{% endif %}>WIFI</option>
+							<option value="hotspot" {% if config['network_mode'] == "hotspot" %}selected{% endif %}>Hotspot</option>
+						</select>			
+					</div>
+				</fieldset>
+				
+				<fieldset id="basic-settings" class="settings-fieldset">
+					<legend>Capture Settings</legend>
+					<div class="setting-wrapper">
+						<label for="interval">Interval (sec):</label>
+						<input type="number" min="1" step="1" id="interval" name="interval" value="{{ config['interval'] }}">
+					</div>
+					<div class="setting-wrapper">
+						<label for="auto-stop-enabled">Enable Auto-Stop</label>
+						<select id="auto-stop-enabled" name="auto-stop-enabled">
+							<option value="true" {% if config['auto_stop_enabled'] %}selected{% endif %}>Enabled</option>
+							<option value="false" {% if not config['auto_stop_enabled'] %}selected{% endif %}>Disabled</option>
+						</select>
+					</div>
+					<div class="setting-wrapper {% if not config['auto_stop_enabled'] %}hidden{% endif %}" id="auto-stop-minutes-wrapper">
+						<label for="auto-stop-minutes" id="auto-stop-minutes-label">Idle Timeout (min):</label>
+						<input type="number"  min="1" step="1" id="auto-stop-minutes" name="auto_stop_after_idle_minutes" value="{{ config['auto_stop_after_idle_minutes'] }}">
+					</div>
+				
+					<div class="setting-wrapper">
+						<label for="change-detect">Enable Change Detection</label>
+						<select id="change-detect" name="change_detection_enabled">
+							<option value="true" {% if config['change_detection_enabled'] %}selected{% endif %}>Enabled</option>
+							<option value="false" {% if not config['change_detection_enabled'] %}selected{% endif %}>Disabled</option>
+						</select>
+					</div>
+					
+					<div class="setting-wrapper {% if not config['change_detection_enabled'] %}hidden{% endif %}" id="change-threshold-wrapper">
+						<label for="change-threshold" id="change-threshold-label">Change Threshold:</label>
+						<input type="number" step="0.01" id="change-threshold" name="change_threshold" value="{{ config['change_threshold'] }}">
+					</div>
+					
+					<div class="setting-wrapper">
+						<label for="resolution">Resolution:</label>
+						<select id="resolution" name="resolution">
+						    {% for res in resolutions %}
+								<option value="{{ res.resolution }}" {% if config['resolution'] == res.resolution %}selected{% endif %}>{{ res.resolution }} ({{res.aspect_ratio}})</option>
+							{% endfor %}
+						</select>
+
+						<!--<input type="text" id="resolution" name="resolution" value="{{ config['resolution'] }}">-->
+					</div>
+					<div class="setting-wrapper">
+						<label for="preview-resolution">Preview resolution:</label>
+						<select id="preview-resolution" name="preview_resolution">
+						    {% for res in resolutions %}
+								<option value="{{ res.resolution }}" {% if config['preview_resolution'] == res.resolution %}selected{% endif %}>{{ res.resolution }} ({{res.aspect_ratio}})</option>
+							{% endfor %}
+						</select>
+						<!--<input type="text" id="preview-resolution" name="preview_resolution" value="{{ config['preview_resolution'] }}">-->
+					</div>
+
+				</fieldset>
+				
+
+				<fieldset id="storage-settings" class="settings-fieldset">
+				
+					<legend>Storage Settings</legend>
+					<div class="setting-wrapper">
+						<label for="storage-threshold" id="storage-threshold-label">Storage Threshold:</label>
+						<input type="number" step="1" id="storage-threshold" name="storage_threshold" value="{{ config['storage_threshold'] }}">
+						<p class="setting-info">Disk Space Left to issue warning in MB</p>
+					</div>
+					<div class="setting-wrapper">
+						<label for="storage-path">Storage Path:</label>
+						<input type="text" id="storage-path" name="storage_path" value="{{ config['storage_path'] }}">
+					</div>
+					<div class="setting-wrapper">
+						<label for="download-path">Download Path:</label>
+						<input type="text" id="download-path" name="download_path" value="{{ config['download_path'] }}">
+					</div>
+					<div class="setting-wrapper">
+						<label for="log-path">Log Path:</label>
+						<input type="text" id="log-path" name="log_path" value="{{ config['log_path'] }}">
+					</div>
+					<div class="setting-wrapper">
+						<label for="symlink-path">Latest Image Symlink Path:</label>
+						<input type="text" id="symlink-path" name="latest_symlink" value="{{ config['latest_symlink'] }}">
+						<p class="setting-info">Be sure to include filename. Example: '~/timelapse/latest.jpg'</p>
+					</div>
+				</fieldset>		
+
+
+				<div id="save-button" class="save-button button">
+					Save Changes
+				</div>
+
+
+				<fieldset id="system" class="settings-fieldset danger">
+					<legend>System</legend>
+					<div id="reboot-button" class="button">
+						Reboot System
+					</div>
+					<span id="reboot-status" class="status-message"></span>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+
+
+
+
+
+
+	<!-- Pop-Ups -->
+	<div id="confirm-delete-modal" class="modal hidden">
+	<div class="modal-content">
+		<p>Are you sure you want to delete this ZIP file?</p>
+		<label>
+		<input type="checkbox" id="delete-captures-checkbox"> Also delete captures
+		</label>
+		<div class="modal-buttons">
+		<button id="confirm-delete-btn">Delete</button>
+		<button id="cancel-delete-btn">Cancel</button>
+		</div>
+	</div>
+	</div>
+
+
+
+
+
+	<script>
+  		const initialZipFiles = {{ zip_files | tojson }};
+	</script>
+	<script src="static/script.js"></script>
+</body>
+</html>

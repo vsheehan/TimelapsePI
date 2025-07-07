@@ -1,0 +1,15 @@
+{
+  "interval": 60,
+  "auto_stop_enabled": false,
+  "auto_stop_after_idle_minutes": 60,
+  "change_detection_enabled": true,
+  "change_threshold": 10,
+  "resolution": "1920x1080",
+  "preview_resolution": "320x180",
+  "storage_path": "~/timelapse/capture",
+  "download_path": "~/timelapse/downloads",
+  "log_path": "~/timelapse/logs",
+  "latest_symlink": "~/timelapse/latest.jpg",
+  "storage_threshold": 1024,
+  "network_mode": "wifi"
+}

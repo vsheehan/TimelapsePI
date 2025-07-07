@@ -1,0 +1,318 @@
+body {
+  font-family: sans-serif;
+  padding: 20px;
+  max-width: 100%;
+  margin: 5px auto;
+  font-size: 1.5em;
+}
+
+
+#latest, #stream-img {
+  max-width: 100%;
+  border: 1px solid black;	
+}
+
+
+.hidden {
+	display: none !important;
+}
+
+#main {
+
+}
+
+#nav-tabs {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+}
+
+#warning {
+	border-style: solid;
+	border-color: black;
+	border-width: 2px 2px 0 2px; /* top right bottom left */
+	text-align: center;
+	padding: 6px;
+	font-size: 1.2em;
+}
+#warning span {
+	color: red;
+	font-weight: bold;
+}
+
+
+.nav-tab {
+	display: flex;
+	flex: 1;
+	border-style: solid;
+	border-color: black;
+	border-width: 2px 2px 0 2px; /* top right bottom left */
+	border-radius: 10px 10px 0 0;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+	padding: 5px;
+
+	font-weight: bold;
+	font-size: 1.75em
+}
+.nav-tab:not(:last-of-type) {
+	margin-right: 1px;
+}
+
+.nav-tab.selected {
+	background: lightblue;
+}
+
+.tab {
+	border: 2px solid black;
+	text-align: center;
+}
+
+
+
+.tab:not(.selected) {
+	display: none;
+}
+
+
+#diskspace {
+	display: flex;
+	flex-direction: row;
+}
+#diskspace div {
+	flex: 1;
+}
+
+#cam-controls-wrapper {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 15px;
+}
+
+#cam-controls {
+	display: flex;
+	flex-direction: row;
+	margin: 5px;
+}
+
+.cam-control-button {
+	flex: 1;
+}
+
+.cam-control-button:not(:last-of-type) {
+	margin-right: 5px;
+}
+
+.button {
+	border: 1px solid grey;
+	border-radius: 3px;
+	padding: 8px;
+		font-weight: bold;
+	font-size: 1.25em;
+	background: #EBEBEB;
+	cursor: pointer;
+}
+
+.button.disabled {
+	color: gray;
+	cursor: auto;
+}
+
+#cam-live-warning {
+	font-style: italic;
+}
+
+fieldset {
+	margin: 10px;
+}
+
+.settings-fieldset {
+	display: flex;
+	flex-direction: column;
+	margin: 10px;
+}
+
+fieldset legend {
+	font-weight: bold;
+	font-size: 1.1em;
+}
+
+.settings-fieldset .setting-wrapper {
+	
+	padding: 10px 0;
+	display: flex;
+	align-items: start;
+	justify-content: left;
+	flex-direction: column;
+	
+}
+
+.settings-fieldset .setting-wrapper label { 
+	font-variant-caps: small-caps;
+	color: gray;
+}
+
+.settings-fieldset .setting-wrapper input,
+.settings-fieldset .setting-wrapper select {
+	width: 100%;
+	font-size: 1.25em;
+	height: 1.75em;
+	box-sizing: border-box;
+}
+
+.settings-fieldset .setting-wrapper:not(:last-of-type) {
+	border-bottom: 1px solid lightgrey;
+}
+
+/* Override Settings Fieldset for download captures times.... */
+.settings-row {
+	display: flex;
+	flex-direction:row;
+}
+
+.settings-row .setting-wrapper {
+	flex: 1;
+}
+.settings-row .setting-wrapper:not(:last-of-type) {
+	margin-right: 5px;
+	
+}
+
+
+/*Pop-Ups*/
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  font-size: 1.5em;
+}
+
+.modal-content {
+  background: white;
+  padding: 1em 2em;
+  border-radius: 5px;
+  max-width: 600px;
+  text-align: center;
+  font-size: 1.5em;
+}
+.modal-content input {
+	 font-size: 1.5em;
+	 width: .5em;
+	 height: .5em;
+}
+
+.modal-buttons {
+  margin-top: 1em;
+  
+}
+
+.modal-buttons button {
+  margin: 0 10px;
+  font-size: 1em;
+  padding: 10px;
+}
+
+#download-progress-wrapper {
+	margin-top: 15px;
+}
+
+#zip-list {
+	padding-left: 0;
+	margin: 0;
+}
+
+#zip-list li {
+	font-size: 1.5em;
+	display: flex;
+	flex-direction: row;
+	padding: 5px;
+	border-top: 1px solid lightgray;
+	align-items: center; /* This vertically centers children */
+}
+
+#zip-list li:last-of-type {
+	border-bottom: 1px solid lightgray;
+}
+
+
+#zip-list li:nth-child(odd) {
+	background-color: rgb(233, 233, 233);
+}
+
+#zip-list li a { 
+	text-align: left;
+	flex: 1;
+	
+}
+#zip-list li .delete-btn {
+	margin-right: 5px;
+	
+}
+
+#capture-log {
+  max-height: 1500px;
+  overflow-y: auto;
+  padding: 5px;
+  font-family: monospace;
+  
+}
+
+.log-line {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	
+	padding: 3px;
+	border-top: 1px solid lightgray;
+}
+
+.log-line:last-of-type {
+	border-bottom: 1px solid lightgray;
+}
+.log-line:nth-child(odd) {
+	background-color: rgb(233, 233, 233);
+}
+
+
+.log-date {
+	display: flex;
+	margin-right: 5px;
+	white-space: nowrap;
+	align-items: flex-start;
+	text-align: left;
+}
+
+.log-msg {
+	text-align: left;
+	white-space: pre-wrap;
+	word-break: break-word;
+	overflow-wrap: anywhere;
+}
+
+.red {
+	background-color: red;
+}
+.green {
+	background-color: green;
+}
+
+#system {
+	margin-top: 100px;
+}
+
+#reboot-button {
+  background-color: #c62828;
+  color: white;
+}
+.status-message {
+  margin-left: 1em;
+  font-weight: bold;
+}

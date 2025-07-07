@@ -1,0 +1,30 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+.env/
+.venv/
+
+# VSCode settings
+.vscode/
+
+# Backup folders
+backup/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+#Images
+*.jpg
+
+#log Folder
+logs/
+
+status.json
+publish.sh
+
+
