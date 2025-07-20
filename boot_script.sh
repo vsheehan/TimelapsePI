@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Path to your config.json
-CONFIG_FILE="/home/vsheehan/timelapse/config.json"
+CONFIG_FILE="/home/USERNAME/timelapse/config.json"
 if [ ! -f "$CONFIG_FILE" ]; then
     echo "Error: Config file $CONFIG_FILE not found, starting Wi-Fi mode." | tee -a $FN
     sudo systemctl enable wpa_supplicant.service
@@ -11,7 +11,7 @@ if [ ! -f "$CONFIG_FILE" ]; then
 fi
 
 # Define log file path
-FN="/home/vsheehan/timelapse/logs/boot_connection_log_$(date +%Y-%m-%d_%H-%M-%S).txt"
+FN="/home/USERNAME/timelapse/logs/boot_connection_log_$(date +%Y-%m-%d_%H-%M-%S).txt"
 
 # Create log directory if it doesn't exist
 mkdir -p $(dirname "$FN")
@@ -67,8 +67,8 @@ else
 fi
 
 # Change network_mode to "wifi" in config.json if needed
-jq '.network_mode = "wifi"' /home/vsheehan/timelapse/config.json > tmp.$$.json && mv tmp.$$.json /home/vsheehan/timelapse/config.json
-sudo chown vsheehan:vsheehan /home/vsheehan/timelapse/config.json
+jq '.network_mode = "wifi"' /home/USERNAME/timelapse/config.json > tmp.$$.json && mv tmp.$$.json /home/USERNAME/timelapse/config.json
+sudo chown USERNAME:USERNAME /home/USERNAME/timelapse/config.json
 
 # Sleep for 2 seconds before finishing
 sleep 2#!/bin/bash

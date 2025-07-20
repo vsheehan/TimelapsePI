@@ -1,0 +1,47 @@
+<div class="tab selected" id="home">
+    <div id="cam-wrapper">
+        <fieldset id="cam-latest">
+            <legend>Timelapse</legend>
+            <img id="latest" src="/camera/latest.jpg" alt="Latest capture">
+            <fieldset id="latest-session-wrapper"></fieldset>
+        </fieldset>
+        <fieldset id="cam-live" class="hidden">
+            <legend>Live</legend>
+            <img id="stream-img" alt="Live camera stream">
+        </fieldset>
+    </div>
+
+    <fieldset id="cam-controls-wrapper">
+        <div id="cam-controls">
+            <div id="start-timelapse" class="cam-control-button button">Start Timelapse</div>
+            <div id="stop-timelapse" class="cam-control-button button">Stop Timelapse</div>
+            <div id="toggle-live-view" class="cam-control-button button">Live View</div>
+        </div>
+        <form id="cam-controls-form" method="POST" action="/settings">
+        <div id="cam-controls-settings">
+            <div class="setting-wrapper">
+                <label for="home-interval">Interval (sec):</label>
+                <input type="number" id="home-interval" name="interval" value="{{ config['interval'] }}">
+            </div>
+
+            <div class="setting-wrapper">
+                <label for="home-change-detect">Enable Change Detection</label>
+                <select id="home-change-detect" name="change_detection_enabled" class="field-toggle" data-toggle-id="change-threshold-wrapper">
+                    <option value="true" {% if config['change_detection_enabled'] %}selected{% endif %}>Enabled</option>
+                    <option value="false" {% if not config['change_detection_enabled'] %}selected{% endif %}>Disabled</option>
+                 </select>
+            </div>
+            
+        </div>
+        </form>
+        <div id="cam-live-warning">You must stop the timelapse script to enable live view.</div>
+        <div id="cam-overlay" class="cam-overlay hidden">
+            <div class="spinner"></div>
+        </div>
+    </fieldset>
+
+
+    <fieldset id="system-wrapper">
+        <legend>System</legend>
+    </fieldset>
+</div>

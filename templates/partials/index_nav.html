@@ -1,0 +1,9 @@
+<!-- index_nav.html: Navigation Tabs for main page -->
+<div id="nav-tabs">
+    <div class="nav-tab selected" data-id="home">Home</div>
+    <div class="nav-tab" data-id="sessions">Sessions</div>
+    {% if config.debug %}
+    <div class="nav-tab" data-id="log">Log</div>
+    {% endif %}
+    <div id="settings-tab-button" class="nav-tab" data-id="settings">Settings</div>
+</div>

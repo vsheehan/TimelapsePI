@@ -1,0 +1,755 @@
+*, *::before, *::after {
+	box-sizing: border-box;
+  }
+
+body, 
+html {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: sans-serif;
+	font-size: 1.5em;
+  }
+
+  #main {
+	display: flex;
+	flex-direction: column;
+	height: 100%; 
+	margin: 0;
+	padding: 20px;
+  }
+
+  .tab {
+	flex: 1;
+	overflow-y: auto;
+	padding: 1rem;
+	border: 2px solid black;
+	text-align: center;
+}
+
+
+
+.tab:not(.selected) {
+	display: none;
+}
+
+
+
+.cam-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(220, 220, 220, 0.6);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all;
+  }
+  
+  .cam-overlay.hidden {
+    display: none;
+  }
+  
+  .spinner {
+    width: 32px;
+    height: 32px;
+    border: 4px solid #aaa;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .zip-progress {
+  padding: 5px 0;
+}
+
+.progress-bar {
+  height: 6px;
+  background-color: #ccc;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background-color: #4caf50;
+  transition: width 0.3s ease-in-out;
+}
+
+
+
+
+#latest, #stream-img {
+  max-width: 100%;
+  border: 1px solid black;	
+  max-height: 30vh
+}
+
+.camera-hidden,
+.hidden {
+	display: none !important;
+}
+
+
+
+#nav-tabs {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+}
+
+
+.info-box {
+	border-style: solid;
+	border-color: black;
+	border-width: 2px 2px 0 2px; /* top right bottom left */
+	text-align: center;
+	padding: 6px;
+	font-size: 0.95rem;
+  }
+  
+  .info-box.info {
+	background-color: #eef;
+	color: #223;
+  }
+  
+  .info-box.error {
+	background-color: #fee;
+	color: #a00;
+  }
+  
+  .info-box.success {
+	background-color: #efe;
+	color: #060;
+  }
+  
+  .info-box.warning {
+	background-color: #ffe;
+	color: #880;
+  }
+
+
+.nav-tab {
+	display: flex;
+	flex: 1;
+	border-style: solid;
+	border-color: black;
+	border-width: 2px 2px 0 2px; /* top right bottom left */
+	border-radius: 10px 10px 0 0;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+	padding: 5px;
+
+	font-weight: bold;
+	font-size: 1.75em
+}
+.nav-tab:not(:last-of-type) {
+	margin-right: 1px;
+}
+
+.nav-tab.selected {
+	background: lightblue;
+}
+
+
+
+#diskspace {
+	display: flex;
+	flex-direction: row;
+}
+#diskspace div {
+	flex: 1;
+}
+
+#cam-controls-wrapper {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 15px;
+}
+
+#cam-controls {
+	display: flex;
+	flex-direction: row;
+	margin: 5px;
+}
+
+.cam-control-button {
+	flex: 1;
+}
+
+.cam-control-button:not(:last-of-type) {
+	margin-right: 5px;
+}
+
+.button {
+	border: 1px solid grey;
+	border-radius: 3px;
+	padding: 8px;
+		font-weight: bold;
+	font-size: 1.25em;
+	background: #EBEBEB;
+	cursor: pointer;
+}
+
+.nav-tab.disabled,
+.button.disabled {
+	color: gray;
+	cursor: auto;
+	background: #EBEBEB;
+}
+
+#cam-live-warning {
+	font-style: italic;
+}
+
+fieldset {
+	margin: 10px;
+}
+
+.settings-fieldset {
+	display: flex;
+	flex-direction: column;
+	margin: 10px;
+}
+
+fieldset legend {
+	font-weight: bold;
+	font-size: 1.1em;
+}
+
+.setting-wrapper {
+	
+	padding: 10px 0;
+	display: flex;
+	align-items: start;
+	justify-content: left;
+	flex-direction: column;
+	
+}
+
+.setting-wrapper label { 
+	font-variant-caps: small-caps;
+	color: gray;
+}
+
+.setting-wrapper input,
+.setting-wrapper select {
+	width: 100%;
+	font-size: 1.25em;
+	height: 1.75em;
+	box-sizing: border-box;
+}
+
+.setting-wrapper:not(:last-of-type) {
+	border-bottom: 1px solid lightgrey;
+}
+
+/* Override Settings Fieldset for download captures times.... */
+.settings-row {
+	display: flex;
+	flex-direction:row;
+}
+
+.settings-row .setting-wrapper {
+	flex: 1;
+}
+.settings-row .setting-wrapper:not(:last-of-type) {
+	margin-right: 5px;
+	
+}
+
+
+#download-progress-wrapper {
+	margin-top: 15px;
+}
+
+#zip-list {
+	padding-left: 0;
+	margin: 0;
+}
+
+#zip-list li {
+	font-size: 1.5em;
+	display: flex;
+	flex-direction: row;
+	padding: 5px;
+	border-top: 1px solid lightgray;
+	align-items: center; /* This vertically centers children */
+}
+
+#zip-list li:last-of-type {
+	border-bottom: 1px solid lightgray;
+}
+
+
+#zip-list li:nth-child(odd) {
+	background-color: rgb(233, 233, 233);
+}
+
+#zip-list li a { 
+	text-align: left;
+	flex: 1;
+	
+}
+#zip-list li .delete-btn {
+	margin-right: 5px;
+	
+}
+
+#log {
+	max-height: 1500px;
+  overflow-y: auto;
+}
+
+#capture-log {
+  padding: 5px;
+  font-family: monospace;
+  
+}
+
+.log-line {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	
+	padding: 3px;
+	border-top: 1px solid lightgray;
+}
+
+.log-line:last-of-type {
+	border-bottom: 1px solid lightgray;
+}
+.log-line:nth-child(odd) {
+	background-color: rgb(233, 233, 233);
+}
+
+
+
+
+
+
+.log-date {
+	display: flex;
+	margin-right: 5px;
+	white-space: nowrap;
+	align-items: flex-start;
+	text-align: left;
+}
+
+.log-level,
+.log-category {
+	text-transform: uppercase;
+	margin-right: 5px;
+}
+
+.log-file:before,
+.log-level:before,
+.log-category:before {
+	content: "[";
+}
+
+.log-file::after,
+.log-level:after,
+.log-category:after {
+	content: "]";
+}
+
+
+.log-message {
+	text-align: left;
+	word-break: break-all;
+	overflow-wrap: anywhere;
+}
+
+
+
+.log-level-debug .log-level {
+	color: #999999; /* gray */
+  }
+  
+  .log-level-info .log-level {
+	color: #00cc00; /* green */
+  }
+  
+  .log-level-warning .log-level {
+	color: #e6b800; /* yellow/gold */
+  }
+  
+  .log-level-error .log-level {
+	color: #cc0000; /* red */
+	font-weight: bold;
+  }
+  
+  .log-level-critical .log-level {
+	color: #cc00cc; /* magenta */
+	font-weight: bold;
+  }
+  
+
+
+
+.red {
+	background-color: red;
+}
+.green {
+	background-color: green;
+}
+
+#system {
+	margin-top: 100px;
+}
+
+#reboot-button {
+  background-color: #c62828;
+  color: white;
+}
+.status-message {
+  margin-left: 1em;
+  font-weight: bold;
+}
+
+
+
+
+
+#settings-top-bar {
+	display: flex;
+	flex-direction: row;
+	box-sizing: border-box;
+	margin: 10px;
+	align-items: center;
+}
+
+.flex-filler {
+	flex: 1;
+}
+
+#advanced-toggle-wrapper {
+	align-self: stretch;
+}
+
+#advanced-toggle-wrapper * {
+	cursor: pointer;
+}
+
+
+
+.system-controls {
+	display: flex;
+	gap: 1rem;
+	
+  }
+  #advanced-toggle-wrapper, .sys-btn {
+
+	background: #222;
+	color: #fff;
+	border: none;
+	padding: 0.6rem 1rem;
+	font-size: 1rem;
+	border-radius: 12px;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	cursor: pointer;
+  }
+  
+  .sys-btn svg {
+	width: 18px;
+	height: 18px;
+  }
+  
+  .sys-btn:hover {
+	background: #444;
+  }
+
+
+  #advanced-toggle {
+	width: 18px;
+	height: 18px;
+	background-color: white;
+	border: 2px solid #ccc;
+	border-radius: 4px;
+	cursor: pointer;
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	display: inline-block;
+	position: relative;
+	vertical-align: middle;
+  }
+  
+  /* Checkmark */
+  #advanced-toggle:checked::after {
+	content: "";
+	position: absolute;
+	top: 2px;
+	left: 6px;
+	width: 4px;
+	height: 8px;
+	border: solid black;
+	border-width: 0 2px 2px 0;
+	transform: rotate(45deg);
+  }
+
+
+
+
+  .cam-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(220, 220, 220, 0.6);
+	z-index: 10;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	pointer-events: all;
+  }
+  
+  .cam-overlay.hidden {
+	display: none;
+  }
+  
+  .spinner {
+	width: 32px;
+	height: 32px;
+	border: 4px solid #aaa;
+	border-top-color: transparent;
+	border-radius: 50%;
+	animation: spin 0.8s linear infinite;
+  }
+  
+  @keyframes spin {
+	to { transform: rotate(360deg); }
+  }
+  
+  #cam-controls-wrapper {
+	position: relative;
+  }
+
+  .session-row:not(:first-child):not(:last-child) {
+	border-top: 1px solid gray;
+	border-bottom: 1px solid gray;
+	padding: 10px 0;
+  }
+
+  .session-row:first-child {
+	padding-bottom: 10px;
+  }
+
+  .session-row:last-child {
+	padding-top: 10px;
+  }
+
+
+  .session-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 0.5rem;
+	margin: 0;
+  }
+  
+  .session-header,  
+  .session-data {
+	vertical-align: middle;
+	text-align: left;
+  }
+
+  .session-data {
+	padding: 2px 0;
+  }
+  
+  .session-header {
+	font-weight: bold;
+	color: #333;
+	white-space: nowrap;
+	width: 1%;
+	padding: 2px 8px;
+	padding-left: 25px;
+  }
+  
+  .session-data {
+	color: #222;
+  }
+
+  .session-checkbox {
+	vertical-align: top;
+  }
+
+  .session-checkbox input {
+	width: 1.5rem;
+	height: 1.5rem;
+	accent-color: #3f8cff; /* Optional: modern color support */
+	cursor: pointer;
+  }
+  
+  .session-thumbnail {
+	vertical-align: middle;
+	text-align: center;
+	padding-bottom: 8px;
+	min-width: 260px;
+	width: 260px;
+  }
+  
+  .session-thumbnail img {
+	width: 100%;
+	max-height: 170px;
+	display: block;
+	border-radius: 4px;
+	border: 1px solid #ccc;
+  }
+  
+  /* Status badge styling */
+  .session-status {
+	vertical-align: middle;
+	text-align: center;
+	font-weight: bold;
+	padding: 4px 8px;
+	border-radius: 6px;
+	background-color: #ddd;  /* default gray */
+	color: #333;
+  }
+  
+  .session-status.active {
+	background-color: #d4f4d2;
+	color: #185c1f;
+	border: 1px solid #a4d4a2;
+  }
+  
+  .session-status.inactive {
+	background-color: #eee;
+	color: #666;
+	border: 1px solid #ccc;
+  }
+
+  .session-button-wrapper .button-group {
+	display: flex;
+	flex-direction: column;
+  }
+
+  .session-button-wrapper .button-group button {
+	font-size: 1.5rem;
+	padding: 10px 0;
+	margin: 5px 0;
+	min-width: 190px;
+	width: 190px;
+  }
+
+  #latest-session-wrapper legend {
+	text-align: left;
+	margin-left: 0;
+	padding-left: 0;
+  }
+
+
+  #system-wrapper {
+	display: flex;
+	flex-direction: row;
+  }
+
+  #system-wrapper > * {
+	flex: 1;
+	text-align: center;
+	white-space: nowrap;
+  }
+
+
+
+  #cam-controls-settings {
+	display: flex;
+	gap: 1rem;
+	flex-direction: row;
+	margin: 5px;
+  }
+
+  #cam-controls-settings > * {
+	flex: 1;
+  }
+
+
+  /* static/css/modal.css */
+
+/* assumes .hidden is defined in global CSS */
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    
+  }
+  
+  .modal {
+    background-color: #fff;
+    width: 90%;
+    max-width: 600px;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  
+  }
+  
+  .modal-header h2 {
+    margin: 0;
+    font-size: 3rem;
+    color: #222;
+  }
+  
+  .modal-body {
+    margin-top: 0.75rem;
+    font-size: 2rem;
+    color: #333;
+  }
+  
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+  
+  .btn-confirm,
+  .btn-cancel {
+    padding: 1rem 2rem;
+    font-size: 3rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .btn-confirm {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .btn-confirm:hover {
+    background-color: #005fcc;
+  }
+  
+  .btn-cancel {
+    background-color: #e0e0e0;
+    color: #333;
+  }
+  
+  .btn-cancel:hover {
+    background-color: #c2c2c2;
+  }
+  

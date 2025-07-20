@@ -1,0 +1,15 @@
+<!-- index_log.html: Contains the log tab. -->
+<div class="tab" id="log">
+    <table id="capture-log">
+        {% for entry in log %}
+        
+        <tr class="log-line log-level-{{ entry.level | lower }}">
+            <td class="log-date">{{ entry.timestamp }}</td>
+            <td class="log-level">{{ entry.level }}</td>
+            <td class="log-category">{{ entry.category }}</td>
+            
+            <td class="log-message"><span class="log-file">{{entry.file}}:{{entry.line}}</span> {{ entry.message }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>

@@ -1,0 +1,166 @@
+<div class="tab" id="settings">
+    <form id="settings-form" method="POST" action="/settings">
+      <div id="settings-top-bar">
+        <div id="advanced-toggle-wrapper">
+            <input id="advanced-toggle" type="checkbox" />
+            <label for="advanced-toggle">Show Advanced</label>
+        </div>
+        <div class="flex-filler">
+            &nbsp;
+        </div>
+        <div class="system-controls">
+        <div id="rebootBtn" title="Reboot" class="sys-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 1 0 .49-9.27L1 10"></path>
+            </svg>
+            
+        </div>
+    
+        <div id="shutdownBtn" title="Shutdown" class="sys-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="2" x2="12" y2="12"></line>
+            <path d="M5.51 7.05a9 9 0 1 0 12.98 0"></path>
+            </svg>
+            
+        </div>
+        </div>
+      </div>
+      <fieldset class="settings-fieldset">
+        <legend>Capture Settings</legend>
+        <div class="setting-wrapper">
+          <label for="interval">Interval (sec):</label>
+          <input type="number" id="interval" name="interval" value="{{ config['interval'] }}">
+        </div>
+
+        <div class="setting-wrapper">
+          <label for="change-detect">Enable Change Detection</label>
+          <select id="change-detect" name="change_detection_enabled" class="field-toggle" data-toggle-id="change-threshold-wrapper">
+            <option value="true" {% if config['change_detection_enabled'] %}selected{% endif %}>Enabled</option>
+          <option value="false" {% if not config['change_detection_enabled'] %}selected{% endif %}>Disabled</option>
+          </select>
+        </div>
+
+
+        <div class="setting-wrapper {% if not config['change_detection_enabled'] %}hidden{% endif %}" id="change-threshold-wrapper">
+          <label for="change-threshold">Change Threshold:</label>
+          <input type="number" step="0.01" id="change-threshold" name="change_threshold" value="{{ config['change_threshold'] }}">
+        </div>
+
+        <div class="setting-wrapper">
+          <label for="auto-stop-enabled">Enable Auto-Stop</label>
+          <select id="auto-stop-enabled" name="auto_stop_enabled" class="field-toggle" data-toggle-id="auto-stop-minutes-wrapper">
+            <option value="true" {% if config['auto_stop_enabled'] %}selected{% endif %}>Enabled</option>
+            <option value="false" {% if not config['auto_stop_enabled'] %}selected{% endif %}>Disabled</option>
+          </select>
+        </div>
+        
+        <div class="setting-wrapper {% if not config['auto_stop_enabled'] %}hidden{% endif %}" id="auto-stop-minutes-wrapper">
+          <label for="auto-stop-minutes">Idle Timeout (min):</label>
+          <input type="number" id="auto-stop-minutes" name="auto_stop_after_idle_minutes" value="{{ config['auto_stop_after_idle_minutes'] }}">
+        </div>
+
+
+
+      </fieldset>
+
+      <fieldset class="settings-fieldset">
+        <legend>Camera Settings</legend>
+        <div class="setting-wrapper">
+          <label for="camera-type">Camera Type:</label>
+          <select id="camera-type" name="camera_type">
+            <option value="usb" {% if config['camera_type'] == 'usb' %}selected{% endif %}>USB</option>
+            <option value="libcamera" {% if config['camera_type'] == 'libcamera' %}selected{% endif %}>Built In</option>
+          </select>
+        </div>
+        <div id="autofocus-mode-wrapper"  class="setting-wrapper {% if config['camera_type'] == 'usb' %}camera-hidden{% endif %}">
+          <label for="autofocus-mode">Autofocus Mode:</label>
+          <select id="autofocus-mode" name="autofocus_mode">
+            <option value="normal" {% if config['autofocus_mode'] == 'normal' %}selected{% endif %}>Normal</option>
+            <option value="macro" {% if config['autofocus_mode'] == 'macro' %}selected{% endif %}>Macro</option>
+          </select>
+        </div>
+        <div id="video-device-wrapper" class="setting-wrapper advanced-setting {% if config['camera_type'] != 'usb' %}camera-hidden{% endif %}">
+            <label for="video-device">Video Device:</label>
+            <input type="text" id="video-device" name="video_device" value="{{ config['video_device'] }}">
+        </div>
+        <div class="setting-wrapper">
+            <label for="resolution">Resolution:</label>
+            <select id="resolution" name="resolution">
+              {% for res in resolutions %}
+              <option value="{{ res.resolution }}" data-aspect-ratio="{{ res.aspect_ratio }}" {% if config['resolution'] == res.resolution %}selected{% endif %}>{{ res.resolution }} ({{ res.aspect_ratio }})</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="setting-wrapper">
+            <label for="preview-resolution">Preview Resolution:</label>
+            <select id="preview-resolution" name="preview_resolution" class="filtered-resolutions">
+              {% for res in resolutions %}
+              <option value="{{ res.resolution }}" {% if config['preview_resolution'] == res.resolution %}selected{% endif %}>{{ res.resolution }} ({{ res.aspect_ratio }})</option>
+              {% endfor %}
+            </select>
+          </div>
+      </fieldset>
+
+
+
+
+      <fieldset class="settings-fieldset">
+        <legend>Network</legend>
+        <div class="setting-wrapper">
+          <label for="network-mode">Network Mode</label>
+          <select id="network-mode" name="network_mode">
+            <option value="wifi" {% if config['network_mode'] == 'wifi' %}selected{% endif %}>WIFI</option>
+            <option value="hotspot" {% if config['network_mode'] == 'hotspot' %}selected{% endif %}>Hotspot</option>
+          </select>
+        </div>
+      </fieldset>
+      <fieldset class="settings-fieldset">
+        <legend>Bluetooth</legend>
+        <div class="setting-wrapper">
+          <label for="bt-enabled">Bluetooth</label>
+          <select id="bt-enabled" name="bt_enabled">
+            <option value="true" {% if config['bt_enabled'] %}selected{% endif %}>Enabled</option>
+          <option value="false" {% if not config['bt_enabled'] %}selected{% endif %}>Disabled</option>
+          </select>
+        </div>
+        <div class="setting-wrapper">
+          <label for="bt-autoconnect">Bluetooth Auto-Connect</label>
+          <select id="bt-autoconnect" name="bt_autoconnect">
+            <option value="true" {% if config['bt_autoconnect'] %}selected{% endif %}>Enabled</option>
+            <option value="false" {% if not config['bt_autoconnect'] %}selected{% endif %}>Disabled</option>
+          </select>
+        </div>
+        <div class="setting-wrapper">
+          <label for="bt-device-name">Bluetooth Device Name</label>
+          <input type="text" id="bt-device-name" name="bt_device_name" value="{{ config['bt_device_name'] }}">
+        </div>
+
+      </fieldset>
+
+      <fieldset class="settings-fieldset advanced-setting">
+        <legend>System</legend>
+        <div class="setting-wrapper">
+          <label for="debug">Debug Mode:</label>
+          <select id="debug" name="debug">
+            <option value="true" {% if config['debug'] %}selected{% endif %}>Enabled</option>
+            <option value="false" {% if not config['debug'] %}selected{% endif %}>Disabled</option>
+          </select>
+        </div>
+        <div class="setting-wrapper">
+          <label for="log-level">Log Level:</label>
+          <select id="log-level" name="log_level">
+            {% for level in ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'] %}
+            <option value="{{ level }}" {% if config['log_level'].upper() == level %}selected{% endif %}>{{ level }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </fieldset>
+      <div id="save-button" class="save-button button">Save Changes</div>
+
+
+    </form>
+  </div>
+  <!-- <script src="static/js/settings.js"></script> -->

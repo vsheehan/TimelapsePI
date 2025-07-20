@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Log file location
-LOG_FILE="/home/vsheehan/timelapse/logs/connection_log_$(date +%Y-%m-%d_%H-%M-%S).txt"
+LOG_FILE="/home/USERNAME/timelapse/logs/connection_log_$(date +%Y-%m-%d_%H-%M-%S).txt"
 
 # Create log directory if it doesn't exist
 mkdir -p $(dirname "$LOG_FILE")
